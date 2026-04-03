@@ -11,11 +11,7 @@ Filtrar livros por categoria (ex: Suspense).
 python -m venv venv
 
 2. Ativar:
-Windows:
 venv\Scripts\activate
-
-Linux/Mac:
-source venv/bin/activate
 
 3. Instalar dependências:
 pip install -r requirements.txt
