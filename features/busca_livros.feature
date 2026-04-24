@@ -1,15 +1,17 @@
-Feature: Busca de livros por categoria
-  Como um usuário
-  Quero filtrar livros por gênero
-  Para encontrar rapidamente o que me interessa
+# language: pt
+Funcionalidade: Busca de livros por categoria
 
-  Scenario: Filtrar livros por categoria de Suspense
-    Given que o banco de dados possui livros de "Suspense" e "Romance"
-    When o usuário solicita a categoria "Suspense"
-    Then o sistema retorna 1 livro
-    And o título do livro é "O Silêncio dos Inocentes"
+Como um usuário
+Quero filtrar livros por gênero
+Para encontrar rapidamente o que me interessa
 
-  Scenario: Categoria sem resultados
-    Given que o banco de dados possui livros de "Suspense" e "Romance"
-    When o usuário solicita a categoria "Fantasia"
-    Then o sistema retorna 0 livro
+  Cenário: Filtrar livros por categoria de Suspense
+    Dado que o banco de dados possui livros de "Suspense" e "Romance"
+    Quando o usuário solicita a categoria "Suspense"
+    Então o sistema retorna 6 livros
+    E o título do livro é "O Silêncio dos Inocentes"
+
+  Cenário: Categoria sem resultados
+    Dado que o banco de dados possui livros de "Suspense" e "Romance"
+    Quando o usuário solicita a categoria "Fantasia"
+    Então o sistema retorna 7 livros

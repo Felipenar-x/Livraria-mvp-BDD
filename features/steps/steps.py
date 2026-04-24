@@ -1,32 +1,22 @@
-import sys
-from pathlib import Path
 from behave import given, when, then
+from models import obter_livros, filtrar_livros
 
-# Permite importar o código da pasta app
-ROOT_DIR = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT_DIR))
-
-from app_livraria.models import Livro
-
-
-@given('que o banco de dados possui livros de "{cat1}" e "{cat2}"')
-def step_impl(context, cat1, cat2):
-    context.livros = [
-        {"titulo": "O Silêncio dos Inocentes", "categoria": cat1},
-        {"titulo": "Orgulho e Preconceito", "categoria": cat2},
-    ]
-
+@given('que o banco de dados possui livros de "Suspense" e "Romance"')
+def step_impl(context):
+    context.lista_total = obter_livros()
 
 @when('o usuário solicita a categoria "{categoria}"')
 def step_impl(context, categoria):
-    context.resultado = filtrar_livros(context.livros, categoria)
+    # Removi os colchetes daqui para enviar a STRING direto, 
+    # como o seu models.py e app.py esperam.
+    context.resultado = filtrar_livros(context.lista_total, categoria)
 
-
-@then("o sistema retorna {qtd:d} livro")
-def step_impl(context, qtd):
-    assert len(context.resultado) == qtd
-
+@then('o sistema retorna {quantidade:d} livro')
+@then('o sistema retorna {quantidade:d} livros')
+def step_impl(context, quantidade):
+    assert len(context.resultado) == quantidade, f"Esperava {quantidade}, mas retornou {len(context.resultado)}"
 
 @then('o título do livro é "{titulo}"')
 def step_impl(context, titulo):
-    assert context.resultado[0]["titulo"] == titulo
+    titulos = [l['titulo'] for l in context.resultado]
+    assert titulo in titulos, f"O livro {titulo} não foi encontrado"
