@@ -6,7 +6,7 @@ from behave import given, when, then
 ROOT_DIR = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT_DIR))
 
-from app.livraria import filtrar_livros
+from app_livraria.models import Livro
 
 
 @given('que o banco de dados possui livros de "{cat1}" e "{cat2}"')

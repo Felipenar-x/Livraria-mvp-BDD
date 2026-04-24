@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Livraria MVP - MVC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-blue-50 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto">
+        
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-[#030213] mb-2">Busca de Livros</h1>
+            <p class="text-gray-600">Encontre seus livros favoritos por categoria</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-100 relative" id="search-wrapper">
+    <label class="block mb-3 text-sm font-medium text-gray-700">Buscar por categoria</label>
+    <div class="flex gap-2">
+        <div class="relative flex-1">
+            <input 
+                type="text" 
+                id="search-input"
+                name="categoria" 
+                value="{{ categoria_atual or '' }}"
+                autocomplete="off"
+                placeholder="Digite uma categoria..." 
+                class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-600 outline-none transition-all"
+            >
+            <div id="custom-dropdown" class="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg hidden max-h-60 overflow-auto">
+                </div>
+        </div>
+        <button onclick="realizarBusca()" class="bg-[#030213] text-white px-6 py-3 rounded-lg font-medium hover:opacity-90">
+            Filtrar
+        </button>
+    </div>
+</div>
+
+        <div class="mb-4 px-2 text-sm text-gray-500">
+            {{ livros|length }} {% if livros|length == 1 %}livro encontrado{% else %}livros encontrados{% endif %}
+        </div>
+
+        <div class="grid gap-4">
+            {% for livro in livros %}
+            <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-all border border-gray-50 flex items-center justify-between group">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2 group-hover:text-purple-700 transition-colors">{{ livro.titulo }}</h3>
+                    <span class="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold uppercase tracking-wider">
+                        {{ livro.categoria }}
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if livros|length == 0 %}
+        <div class="text-center py-20 bg-white rounded-xl border-2 border-dashed border-gray-200">
+            <p class="text-gray-400 font-medium">Nenhum livro encontrado nesta categoria.</p>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <script>
+    // Lista de categorias (Pode expandir conforme sua lista de 50 livros)
+    const categorias = ["Suspense", "Romance", "Horror", "Ficção Científica", "Fantasia", "Tecnologia", "História", "Distopia"];
+
+    const input = document.getElementById('search-input');
+    const dropdown = document.getElementById('custom-dropdown');
+
+    input.addEventListener('input', () => {
+        const valor = input.value.toLowerCase();
+        dropdown.innerHTML = '';
+        
+        if (valor.length > 0) {
+            const filtradas = categorias.filter(c => c.toLowerCase().includes(valor));
+            
+            if (filtradas.length > 0) {
+                dropdown.classList.remove('hidden');
+                filtradas.forEach(cat => {
+                    const item = document.createElement('div');
+                    item.className = 'px-4 py-3 hover:bg-purple-50 cursor-pointer text-gray-700 border-b border-gray-50 last:border-0 transition-colors';
+                    item.innerHTML = cat;
+                    item.onclick = () => {
+                        input.value = cat;
+                        dropdown.classList.add('hidden');
+                        
+                    };
+                    dropdown.appendChild(item);
+                });
+            } else {
+                dropdown.classList.add('hidden');
+            }
+        } else {
+            dropdown.classList.add('hidden');
+        }
+    });
+
+    function realizarBusca() {
+        const termo = document.getElementById('search-input').value;
+        window.location.href = `/?categoria=${termo}`;
+    }
+
+    // Fechar se clicar fora
+    document.addEventListener('click', (e) => {
+        if (!document.getElementById('search-wrapper').contains(e.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+</script>
+</body>
+</html>

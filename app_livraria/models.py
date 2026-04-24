@@ -1,3 +1,6 @@
+from django.db import models
+
+# Create your models here.
 def filtrar_livros(lista_livros, categoria_alvo):
     """
     Retorna apenas os livros da categoria escolhida.
